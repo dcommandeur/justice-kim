@@ -28,7 +28,7 @@ main {
     padding: 80px 20px 60px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     margin: 0 -20px;
-    width: 100wv;
+    width: 100vw;
     box-shadow: 0 10px 40px rgba(0,0,0,0.1);
 }
 
@@ -247,6 +247,35 @@ footer {
     &:hover {
         color: whitesmoke;
         border: 1px solid whitesmoke;
+    }
+}
+
+article {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: -1rem 0 1rem 0;
+
+    span {
+        color: white;
+    }
+
+    a {
+        border: none;
+
+        &:hover {
+            img {
+                transform: scale(1.5);
+            }
+        }
+    }
+
+    img {
+        height: 1.6rem;
+        transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
     }
 }
 
