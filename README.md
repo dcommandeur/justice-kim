@@ -7,3 +7,7 @@ I will make it less punishing to pet their broken ego's I guess if you do intent
 https://grok.com/share/bGVnYWN5_5f97d191-ac8b-4498-a447-a9e9af9a1df5
 
 For elon tusk
+
+https://grok.com/share/bGVnYWN5_e2765f8d-90fa-4042-8549-af850cfeb7ba
+
+For Derekiak Musk COmmandeurrue
