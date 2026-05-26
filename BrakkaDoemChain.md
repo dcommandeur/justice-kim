@@ -1,4 +1,4 @@
-# BrakaDoemChain (latest wip (forget the H (or the e with o)))
+# BrakkaDoemChain (latest wip (forget the H (or the e with o)))
 
 Global justice system distributed, transparent and immutable and accesable. A online platform
 build with blockchain and web3 technology. Intented to provide a global and community based justice balancing platform.
