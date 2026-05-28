@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Derek's Commandocentrum | Justice, Shadow & Aelneri</title>
+    <!-- Tailwind CSS voor een premium, ultra-moderne look & feel -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome voor stijlvolle icoontjes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter voor strakke leesbaarheid -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050508;
+            overflow: hidden;
+        }
+        /* Subtiele glassmorphism effecten */
+        .glass-panel {
+            background: rgba(10, 10, 18, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        /* Custom scrollbar voor de zijbalk */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+        /* Animaties voor de sfeer */
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        .glow-text {
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="w-full h-screen text-white relative">
+
+    <!-- DrieJS Canvas Container -->
+    <div id="canvas-container" class="absolute inset-0 w-full h-full z-0"></div>
+
+    <!-- UI Overlay -->
+    <div class="absolute inset-0 pointer-events-none z-10 flex flex-col justify-between p-4 md:p-8">
+        
+        <!-- Header -->
+        <header class="w-full flex justify-between items-start pointer-events-auto">
+            <div class="glass-panel p-4 rounded-2xl max-w-md">
+                <div class="flex items-center space-x-3">
+                    <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span class="text-xs font-mono tracking-widest text-emerald-400 uppercase">Systeem Actief</span>
+                </div>
+                <h1 class="text-2xl font-black mt-1 tracking-tight bg-gradient-to-r from-white via-slate-300 to-indigo-400 bg-clip-text text-transparent">
+                    DEREK COMMANDEUR
+                </h1>
+                <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                    De ultieme synthese van <span class="text-indigo-300">shadow.mom</span>, <span class="text-purple-300">aelneri.world</span> en <span class="text-amber-300">justice.kim</span>. Geen soep, maar pure 3D architectuur.
+                </p>
+            </div>
+
+            <!-- Snelle links naar jouw netwerk -->
+            <div class="hidden md:flex space-x-3">
+                <a href="https://justice.kim" target="_blank" class="glass-panel px-4 py-2 rounded-xl text-xs font-semibold hover:bg-white/10 transition duration-300 flex items-center space-x-2">
+                    <i class="fa-solid fa-scale-balanced text-amber-400"></i>
+                    <span>justice.kim</span>
+                </a>
+                <a href="https://aelneri.world" target="_blank" class="glass-panel px-4 py-2 rounded-xl text-xs font-semibold hover:bg-white/10 transition duration-300 flex items-center space-x-2">
+                    <i class="fa-solid fa-globe text-purple-400"></i>
+                    <span>aelneri.world</span>
+                </a>
+                <a href="https://shadow.mom" target="_blank" class="glass-panel px-4 py-2 rounded-xl text-xs font-semibold hover:bg-white/10 transition duration-300 flex items-center space-x-2">
+                    <i class="fa-solid fa-moon text-indigo-400"></i>
+                    <span>shadow.mom</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Centraal Interactiepaneel (Linksonder) -->
+        <main class="w-full md:max-w-md pointer-events-auto mt-auto">
+            <div class="glass-panel p-6 rounded-3xl flex flex-col space-y-4">
+                
+                <div class="border-b border-white/10 pb-3">
+                    <span class="text-xs font-mono text-indigo-400 uppercase tracking-wider">Interactieve Simulator</span>
+                    <h2 class="text-lg font-bold text-slate-100">Besturing & Elementen</h2>
+                </div>
+
+                <!-- Besturingselementen voor de 3D Scene -->
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="focusOn('scales')" class="flex flex-col items-center justify-center p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition group">
+                        <i class="fa-solid fa-scale-balanced text-xl text-amber-400 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-[10px] mt-2 font-semibold">De Weegschaal</span>
+                    </button>
+                    <button onclick="focusOn('ship')" class="flex flex-col items-center justify-center p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 hover:bg-indigo-500/20 transition group">
+                        <i class="fa-solid fa-ship text-xl text-indigo-400 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-[10px] mt-2 font-semibold">Het Schip</span>
+                    </button>
+                    <button onclick="focusOn('chocolate')" class="flex flex-col items-center justify-center p-3 rounded-xl bg-yellow-900/20 border border-yellow-800/30 hover:bg-yellow-900/35 transition group">
+                        <i class="fa-solid fa-cubes text-xl text-yellow-600 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-[10px] mt-2 font-semibold">Sjokolaade</span>
+                    </button>
+                </div>
+
+                <!-- Live status of poëtische noot van Derek -->
+                <div id="info-box" class="bg-black/40 p-3 rounded-xl border border-white/5 text-xs text-slate-300 space-y-1 min-h-[60px] flex flex-col justify-center">
+                    <p class="font-bold text-slate-200" id="info-title">Gebruik de muis of vingers</p>
+                    <p id="info-desc">Sleep om de camera te draaien. Scroll om te zoomen. Klik op de knoppen hierboven om specifieke dimensies te verkennen.</p>
+                </div>
+
+                <!-- Interactieve toggles -->
+                <div class="flex items-center justify-between text-xs pt-1">
+                    <span class="text-slate-400"><i class="fa-solid fa-wind mr-1"></i> Zee-animatie</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle-waves" checked class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                    </label>
+                </div>
+
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-400"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Kosmische Mist</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle-stars" checked class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600"></div>
+                    </label>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Footer / Credits -->
+        <footer class="w-full flex flex-col md:flex-row justify-between items-center text-[10px] text-slate-500 mt-4 pointer-events-auto">
+            <p>© 2026 Derek Commandeur. Alle rechten op sjokolaade en rechtvaardigheid voorbehouden.</p>
+            <div class="flex space-x-4 mt-2 md:mt-0">
+                <span class="hover:text-white transition duration-200 cursor-help" onclick="showSecretModal()"><i class="fa-solid fa-key mr-1 text-emerald-500"></i> Derek's Geheim</span>
+                <span>Gebouwd met Three.js & Passie</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Geheime Modal (Custom in plaats van alert) -->
+    <div id="secret-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel max-w-md w-full p-6 rounded-3xl relative">
+            <button onclick="hideSecretModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center space-y-3">
+                <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto text-2xl animate-spin-slow">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <h3 class="text-xl font-bold">Derek's Commandeur Code</h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    "Een schil van librari en librari koek, Te veel ontwikkel-skill en skillex is al soep. Dus de winkel van skilloos prompten en piemlefriemle crème brûlée!"
+                </p>
+                <div class="bg-black/50 p-3 rounded-lg border border-white/5 text-[11px] font-mono text-emerald-400 text-left">
+                    Status: Master of the Digital Realm<br>
+                    Shadow: Mom is watching<br>
+                    Justice: Fully Balanced<br>
+                    Chocolate: Sweet & High Poly
+                </div>
+                <button onclick="hideSecretModal()" class="w-full py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-xs font-bold rounded-xl transition duration-300">
+                    Sluiten & Terug naar de Matrix
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <script>
+        // Systeem & Three.js Variabelen
+        let scene, camera, renderer, controls;
+        let starParticles, digitalSea, justiceScale, commandeurShip, chocolateBars;
+        let waveTime = 0;
+        
+        // Elementen voor animatietoggles
+        const toggleWaves = document.getElementById('toggle-waves');
+        const toggleStars = document.getElementById('toggle-stars');
+
+        // Initialiseer de 3D Wereld
+        function init() {
+            const container = document.getElementById('canvas-container');
+
+            // 1. Scene setup met dromerige diepzee/kosmische mist
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x050508, 0.015);
+
+            // 2. Camera setup
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 15, 30);
+
+            // 3. Renderer setup
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            // 4. Orbit Controls (Muis/Touch navigatie)
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI / 2 - 0.05; // Voorkom dat camera onder de vloer duikt
+            controls.minDistance = 5;
+            controls.maxDistance = 80;
+
+            // 5. Belichting (Sfeervol en dramatisch)
+            const ambientLight = new THREE.AmbientLight(0x0b0b1a, 1.5);
+            scene.add(ambientLight);
+
+            // Hoofdlicht (Zon/Maan van Aelneri)
+            const sunLight = new THREE.DirectionalLight(0xfff5e6, 2.0);
+            sunLight.position.set(20, 40, 20);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 2048;
+            sunLight.shadow.mapSize.height = 2048;
+            scene.add(sunLight);
+
+            // Gekleurde sfeerlichten (Shadow paars & Justice goud)
+            const purpleLight = new THREE.PointLight(0x8a2be2, 5, 50);
+            purpleLight.position.set(-15, 8, -5);
+            scene.add(purpleLight);
+
+            const goldLight = new THREE.PointLight(0xffa500, 6, 40);
+            goldLight.position.set(15, 10, 5);
+            scene.add(goldLight);
+
+            // 6. Bouw de Elementen
+            createDigitalSea();
+            createStars();
+            createJusticeScale();
+            createCommandeurShip();
+            createChocolateBars();
+
+            // Window resize event
+            window.addEventListener('resize', onWindowResize);
+            
+            // Start de animatielus zodra alles geladen is
+            animate();
+        }
+
+        // --- PROCEDURAL GENERATION FUNCTIONS ---
+
+        // 1. Digital Neon Sea (De golven van de zee)
+        function createDigitalSea() {
+            const geometry = new THREE.PlaneGeometry(150, 150, 64, 64);
+            
+            // Geavanceerd glanzend materiaal met draadframe overlay look
+            const material = new THREE.MeshStandardMaterial({
+                color: 0x0f172a,
+                roughness: 0.1,
+                metalness: 0.8,
+                flatShading: true,
+                wireframe: false
+            });
+
+            digitalSea = new THREE.Mesh(geometry, material);
+            digitalSea.rotation.x = -Math.PI / 2;
+            digitalSea.position.y = -2;
+            digitalSea.receiveShadow = true;
+            scene.add(digitalSea);
+
+            // Voeg een subtiel oplichtend grid toe boven het water voor cyber-vibe
+            const gridHelper = new THREE.GridHelper(150, 40, 0x4f46e5, 0x1e1b4b);
+            gridHelper.position.y = -1.9;
+            scene.add(gridHelper);
+        }
+
+        // 2. Kosmische Sterren & Lichtdeeltjes (Aelneri & Shadow)
+        function createStars() {
+            const count = 1200;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+
+            for (let i = 0; i < count * 3; i += 3) {
+                // Verspreid in een grote koepel rondom de scene
+                positions[i] = (Math.random() - 0.5) * 160;
+                positions[i + 1] = Math.random() * 80;
+                positions[i + 2] = (Math.random() - 0.5) * 160;
+
+                // Kleurenmix tussen goud, paars en blauw
+                const r = Math.random();
+                if (r < 0.3) {
+                    colors[i] = 1.0; colors[i+1] = 0.8; colors[i+2] = 0.4; // Goud
+                } else if (r < 0.6) {
+                    colors[i] = 0.6; colors[i+1] = 0.2; colors[i+2] = 1.0; // Paars
+                } else {
+                    colors[i] = 0.2; colors[i+1] = 0.6; colors[i+2] = 1.0; // Blauw
+                }
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            // Ronde zachte deeltjes met behulp van een canvas-texture
+            const pMaterial = new THREE.PointsMaterial({
+                size: 0.6,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                sizeAttenuation: true
+            });
+
+            starParticles = new THREE.Points(geometry, pMaterial);
+            scene.add(starParticles);
+        }
+
+        // 3. De Weegschaal van Rechtvaardigheid (Procedural Justice.kim)
+        function createJusticeScale() {
+            justiceScale = new THREE.Group();
+
+            const goldMaterial = new THREE.MeshStandardMaterial({
+                color: 0xdfb043,
+                metalness: 0.9,
+                roughness: 0.15,
+                envMapIntensity: 1.0
+            });
+
+            const darkMetal = new THREE.MeshStandardMaterial({
+                color: 0x1e293b,
+                metalness: 0.8,
+                roughness: 0.3
+            });
+
+            // Basis
+            const baseGeo = new THREE.CylinderGeometry(4, 4.5, 0.8, 32);
+            const base = new THREE.Mesh(baseGeo, darkMetal);
+            base.castShadow = true;
+            base.receiveShadow = true;
+            justiceScale.add(base);
+
+            // Hoofdpilaar
+            const pillarGeo = new THREE.CylinderGeometry(0.5, 0.7, 12, 16);
+            const pillar = new THREE.Mesh(pillarGeo, goldMaterial);
+            pillar.position.y = 6;
+            pillar.castShadow = true;
+            justiceScale.add(pillar);
+
+            // Dwarsbalk (Weegarm)
+            const beamGeo = new THREE.CylinderGeometry(0.25, 0.25, 14, 16);
+            const beam = new THREE.Mesh(beamGeo, goldMaterial);
+            beam.rotation.z = Math.PI / 2;
+            beam.position.y = 11.5;
+            beam.castShadow = true;
+            beam.name = "beam"; // Voor animatie/balans
+            justiceScale.add(beam);
+
+            // Schalen links en rechts ophangen
+            const plateGeo = new THREE.CylinderGeometry(2.5, 2.5, 0.15, 32);
+            
+            // Groep voor linker schaal
+            const leftScaleGroup = new THREE.Group();
+            leftScaleGroup.position.set(-7, 11.5, 0);
+            leftScaleGroup.name = "leftScale";
+
+            // Draden/kettingen
+            const ropeGeo = new THREE.CylinderGeometry(0.04, 0.04, 5, 8);
+            const rope1 = new THREE.Mesh(ropeGeo, darkMetal);
+            rope1.position.set(0, -2.5, 0);
+            leftScaleGroup.add(rope1);
+
+            const plateLeft = new THREE.Mesh(plateGeo, goldMaterial);
+            plateLeft.position.set(0, -5, 0);
+            plateLeft.castShadow = true;
+            leftScaleGroup.add(plateLeft);
+            justiceScale.add(leftScaleGroup);
+
+            // Groep voor rechter schaal
+            const rightScaleGroup = new THREE.Group();
+            rightScaleGroup.position.set(7, 11.5, 0);
+            rightScaleGroup.name = "rightScale";
+
+            const rope2 = new THREE.Mesh(ropeGeo, darkMetal);
+            rope2.position.set(0, -2.5, 0);
+            rightScaleGroup.add(rope2);
+
+            const plateRight = new THREE.Mesh(plateGeo, goldMaterial);
+            plateRight.position.set(0, -5, 0);
+            plateRight.castShadow = true;
+            rightScaleGroup.add(plateRight);
+            justiceScale.add(rightScaleGroup);
+
+            // Positioneer de totale weegschaal in de scene
+            justiceScale.position.set(-15, 0, -5);
+            scene.add(justiceScale);
+        }
+
+        // 4. Het Schip (Procedural Commandeur Bootje)
+        function createCommandeurShip() {
+            commandeurShip = new THREE.Group();
+
+            const woodMat = new THREE.MeshStandardMaterial({
+                color: 0x5c4033,
+                roughness: 0.6,
+                metalness: 0.1,
+                flatShading: true
+            });
+
+            const sailMat = new THREE.MeshStandardMaterial({
+                color: 0xf1f5f9,
+                roughness: 0.5,
+                metalness: 0.0,
+                side: THREE.DoubleSide
+            });
+
+            const neonMat = new THREE.MeshStandardMaterial({
+                color: 0x818cf8,
+                emissive: 0x4f46e5,
+                emissiveIntensity: 1.5,
+                roughness: 0.1
+            });
+
+            // Romp van het schip (Extrusie/Stylised box)
+            const hullGeo = new THREE.BoxGeometry(3, 1.5, 8);
+            const hull = new THREE.Mesh(hullGeo, woodMat);
+            hull.position.y = 0.75;
+            hull.castShadow = true;
+            commandeurShip.add(hull);
+
+            // Scherpe boeg (Voorkant)
+            const bowGeo = new THREE.ConeGeometry(2, 4, 4);
+            const bow = new THREE.Mesh(bowGeo, woodMat);
+            bow.rotation.x = Math.PI / 2;
+            bow.rotation.y = Math.PI;
+            bow.position.set(0, 0.75, 4.5);
+            bow.scale.set(1.5, 2, 0.7);
+            bow.castShadow = true;
+            commandeurShip.add(bow);
+
+            // Achtersteven (Sierblok)
+            const cabinGeo = new THREE.BoxGeometry(2.6, 2, 2.5);
+            const cabin = new THREE.Mesh(cabinGeo, woodMat);
+            cabin.position.set(0, 1.5, -2.5);
+            cabin.castShadow = true;
+            commandeurShip.add(cabin);
+
+            // Mast
+            const mastGeo = new THREE.CylinderGeometry(0.15, 0.25, 8, 8);
+            const mast = new THREE.Mesh(mastGeo, woodMat);
+            mast.position.set(0, 4.5, 0.5);
+            mast.castShadow = true;
+            commandeurShip.add(mast);
+
+            // Grote Zeil
+            const sailGeo = new THREE.BoxGeometry(0.05, 5, 4);
+            const sail = new THREE.Mesh(sailGeo, sailMat);
+            sail.position.set(0, 5, 0.5);
+            sail.rotation.y = 0.3; // Beetje wind vangen
+            sail.castShadow = true;
+            commandeurShip.add(sail);
+
+            // Neon strips/decoratie langs de romp
+            const neonStripL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.2, 7), neonMat);
+            neonStripL.position.set(1.55, 0.8, 0);
+            commandeurShip.add(neonStripL);
+
+            const neonStripR = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.2, 7), neonMat);
+            neonStripR.position.set(-1.55, 0.8, 0);
+            commandeurShip.add(neonStripR);
+
+            // Positioneer het schip op de digitale zee
+            commandeurShip.position.set(0, -1, 5);
+            scene.add(commandeurShip);
+        }
+
+        // 5. Sjokolaade Repen (Floating Chocolate Bars)
+        function createChocolateBars() {
+            chocolateBars = new THREE.Group();
+
+            // Rijke chocolade bruine/goudkleurige materialen
+            const chocoMat = new THREE.MeshStandardMaterial({
+                color: 0x3d2314, // Puur chocoladebruin
+                roughness: 0.2,
+                metalness: 0.1,
+                flatShading: true
+            });
+
+            const goldenWrapperMat = new THREE.MeshStandardMaterial({
+                color: 0xffd700,
+                roughness: 0.1,
+                metalness: 0.95
+            });
+
+            // We maken een set van 3 zwevende repen
+            for (let i = 0; i < 3; i++) {
+                const singleBar = new THREE.Group();
+
+                // Chocolade reep basis
+                const baseGeo = new THREE.BoxGeometry(2.5, 0.4, 5);
+                const base = new THREE.Mesh(baseGeo, chocoMat);
+                base.castShadow = true;
+                singleBar.add(base);
+
+                // Chocoladesegmenten (de bekende blokjes)
+                for (let x = -0.8; x <= 0.8; x += 0.8) {
+                    for (let z = -1.8; z <= 1.8; z += 0.9) {
+                        const blockGeo = new THREE.BoxGeometry(0.6, 0.2, 0.7);
+                        const block = new THREE.Mesh(blockGeo, chocoMat);
+                        block.position.set(x, 0.25, z);
+                        block.castShadow = true;
+                        singleBar.add(block);
+                    }
+                }
+
+                // Gedeeltelijk gouden wikkel onderop
+                const wrapperGeo = new THREE.BoxGeometry(2.6, 0.45, 2.5);
+                const wrapper = new THREE.Mesh(wrapperGeo, goldenWrapperMat);
+                wrapper.position.set(0, -0.01, -1.35);
+                wrapper.castShadow = true;
+                singleBar.add(wrapper);
+
+                // Spreid en roteer ze artistiek
+                singleBar.position.set(15 + i * 3, 4 + i * 2, -5 - i * 2);
+                singleBar.rotation.set(Math.random() * 0.5, Math.random() * 0.5, Math.random() * 0.5);
+                
+                // Unieke snelheden opslaan voor de zwevende animatie
+                singleBar.userData = {
+                    speedY: 0.5 + i * 0.2,
+                    rotSpeed: 0.2 + i * 0.1,
+                    initialY: 4 + i * 2
+                };
+
+                chocolateBars.add(singleBar);
+            }
+
+            scene.add(chocolateBars);
+        }
+
+        // --- ANIMATIE & GAME LOOP ---
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update orbit controls
+            controls.update();
+
+            const time = performance.now() * 0.001;
+
+            // 1. Zee Golf-animatie (Vertice manipulatie)
+            if (digitalSea && toggleWaves.checked) {
+                waveTime += 0.015;
+                const position = digitalSea.geometry.attributes.position;
+                for (let i = 0; i < position.count; i++) {
+                    const u = position.getX(i);
+                    const v = position.getY(i);
+                    // Combineer sinus- en cosinusgolven voor een natuurlijke, hypnotiserende golfslag
+                    const z = Math.sin(u * 0.1 + waveTime) * 0.6 + Math.cos(v * 0.1 + waveTime) * 0.6;
+                    position.setZ(i, z);
+                }
+                position.needsUpdate = true;
+            }
+
+            // 2. Sterrenstelsel langzame rotatie
+            if (starParticles && toggleStars.checked) {
+                starParticles.rotation.y = time * 0.015;
+                starParticles.rotation.x = time * 0.005;
+            }
+
+            // 3. Weegschaal Balans-animatie (Heen en weer wiegen als een echte wetgever)
+            if (justiceScale) {
+                const beam = justiceScale.getObjectByName("beam");
+                const leftScale = justiceScale.getObjectByName("leftScale");
+                const rightScale = justiceScale.getObjectByName("rightScale");
+
+                const tilt = Math.sin(time * 1.5) * 0.15; // Zacht schommelen
+
+                if (beam) beam.rotation.z = Math.PI / 2 + tilt;
+                
+                if (leftScale && rightScale) {
+                    // Schalen hangen loodrecht naar beneden ongeacht de hoek van de balk
+                    leftScale.position.y = 11.5 + Math.sin(tilt) * 7;
+                    leftScale.position.x = -7 * Math.cos(tilt);
+                    
+                    rightScale.position.y = 11.5 - Math.sin(tilt) * 7;
+                    rightScale.position.x = 7 * Math.cos(tilt);
+                }
+            }
+
+            // 4. Schip Deining (Meebewegen op de zee-animatie)
+            if (commandeurShip) {
+                // Schommeling over de lengteas (stampen) en dwarsas (rollen)
+                commandeurShip.position.y = -1.2 + Math.sin(time * 1.2) * 0.3;
+                commandeurShip.rotation.z = Math.sin(time * 1.5) * 0.05;
+                commandeurShip.rotation.x = Math.cos(time * 1.0) * 0.03;
+                
+                // Langzaam varen/cirkelen
+                commandeurShip.position.x = Math.sin(time * 0.2) * 8;
+                commandeurShip.position.z = 5 + Math.cos(time * 0.2) * 8;
+                commandeurShip.rotation.y = -time * 0.2; // Richten in vaarrichting
+            }
+
+            // 5. Zwevende Chocoladerepen
+            if (chocolateBars) {
+                chocolateBars.children.forEach(bar => {
+                    const u = bar.userData;
+                    bar.position.y = u.initialY + Math.sin(time * u.speedY) * 0.8;
+                    bar.rotation.y += 0.005 * u.rotSpeed;
+                    bar.rotation.x += 0.003 * u.rotSpeed;
+                });
+            }
+
+            // Render de scene
+            renderer.render(scene, camera);
+        }
+
+        // Camera focus hulpfunctie
+        function focusOn(element) {
+            const infoTitle = document.getElementById('info-title');
+            const infoDesc = document.getElementById('info-desc');
+
+            if (element === 'scales') {
+                // Focus op Weegschaal (Justice.kim)
+                smoothCameraMove({ x: -15, y: 7, z: 8 }, { x: -15, y: 4, z: -5 });
+                infoTitle.innerText = "De Weegschaal van Rechtvaardigheid";
+                infoDesc.innerText = "Geïnspireerd op justice.kim. Perfect gebalanceerd, glanzend goud en bestand tegen elke storm van de digitale zee.";
+            } else if (element === 'ship') {
+                // Focus op Schip (Commandeur's Vloot)
+                smoothCameraMove({ x: 8, y: 5, z: 12 }, { x: 0, y: 0, z: 5 });
+                infoTitle.innerText = "Derek's Cyber-Schip";
+                infoDesc.innerText = "Navigeert door de wateren van shadow.mom en aelneri.world. Uitgerust met legendarische neon-stabilisatoren.";
+            } else if (element === 'chocolate') {
+                // Focus op de chocolade
+                smoothCameraMove({ x: 18, y: 8, z: 5 }, { x: 18, y: 4, z: -7 });
+                infoTitle.innerText = "Premium Chocoladestaven";
+                infoDesc.innerText = "Echte 'repen sjokolaade', versierd met vloeibaar 3D goudfolie. Niet van nep-soep, maar pure wiskundige geometrie.";
+            }
+        }
+
+        // Vloeiende cameraovergang
+        function smoothCameraMove(targetCamPos, targetLookAt) {
+            // Pas direct aan (voor eenvoudige en snelle feedback)
+            // Maar we bouwen een vloeiende transitie met lerp
+            let ticks = 0;
+            const maxTicks = 30;
+            const startCamPos = camera.position.clone();
+            const startTarget = controls.target.clone();
+
+            function lerp() {
+                ticks++;
+                const progress = ticks / maxTicks;
+                
+                // Ease function (Smootherstep)
+                const ease = progress * progress * progress * (progress * (progress * 6 - 15) + 10);
+
+                camera.position.lerpVectors(startCamPos, new THREE.Vector3(targetCamPos.x, targetCamPos.y, targetCamPos.z), ease);
+                controls.target.lerpVectors(startTarget, new THREE.Vector3(targetLookAt.x, targetLookAt.y, targetLookAt.z), ease);
+
+                if (ticks < maxTicks) {
+                    requestAnimationFrame(lerp);
+                }
+            }
+            lerp();
+        }
+
+        // Schermgrootte aanpassen
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Geheime Modal Toggles
+        function showSecretModal() {
+            document.getElementById('secret-modal').classList.remove('hidden');
+        }
+
+        function hideSecretModal() {
+            document.getElementById('secret-modal').classList.add('hidden');
+        }
+
+        // Start het universum zodra de pagina is geladen
+        window.onload = init;
+    </script>
+</body>
+</html>
